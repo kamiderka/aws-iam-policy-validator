@@ -1,0 +1,18 @@
+package main
+
+type Statement struct {
+	Sid      string   `json:"Sid,omitempty"`
+	Effect   string   `json:"Effect" validate:"required,valid-effect"`
+	Action   []string `json:"Action"`
+	Resource string   `json:"Resource"`
+}
+
+type PolicyDocument struct {
+	Version   string      `json:"Version" validate:"required,valid-version" `
+	Statement []*Statement `json:"Statement" validate:"unique-sids,dive"`
+}
+
+type AwsIamRolePolicy struct {
+	PolicyName     string         `json:"PolicyName" validate:"required,max=128,valid-police-name"`
+	PolicyDocument *PolicyDocument `json:"PolicyDocument" validate:"required"`
+}
