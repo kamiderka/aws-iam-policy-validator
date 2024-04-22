@@ -7,6 +7,17 @@ import (
 	"github.com/golang-collections/collections/set"
 )
 
+func NewValidator() *validator.Validate {
+	validator := validator.New()
+
+	validator.RegisterValidation("valid-effect", isValidEffect)
+	validator.RegisterValidation("valid-version", isValidVersion)
+	validator.RegisterValidation("valid-police-name", isValidPoliceName)
+	validator.RegisterValidation("unique-sids", isUniqueStatementSids)
+
+	return validator
+}
+
 func isValidEffect(fl validator.FieldLevel) bool {
 	switch fl.Field().String() {
 	case
@@ -57,26 +68,3 @@ func isUniqueStatementSids(fl validator.FieldLevel) bool {
 	return true
 }
 
-// func isUniqueStatementSids(fl validator.FieldLevel) bool {
-// 	field := //Zrób coś, żeby działało
-// 	prev := set.New()
-// 	for _, statement := range field{
-// 		if prev.Has(statement.Sid){
-// 			return false
-// 		}
-
-// 	}
-
-// 	return true
-// }
-
-func NewValidator() *validator.Validate {
-	validator := validator.New()
-
-	validator.RegisterValidation("valid-effect", isValidEffect)
-	validator.RegisterValidation("valid-version", isValidVersion)
-	validator.RegisterValidation("valid-police-name", isValidPoliceName)
-	validator.RegisterValidation("unique-sids", isUniqueStatementSids)
-
-	return validator
-}
