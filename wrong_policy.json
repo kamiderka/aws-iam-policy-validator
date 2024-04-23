@@ -10,7 +10,16 @@
                     "iam:ListRoles",
                     "iam:ListUsers"
                 ],
-                "Resource": "*"
+                "Resource": "dsad"
+            }, 
+            {
+                "Sid": "IamListAccess",
+                "Effect": "Deny",
+                "Action": [
+                    "iam:ListRoles",
+                    "iam:ListUsers"
+                ],
+                "Resource": "asdsad"
             }, 
             {
                 "Effect": "Deny",
@@ -18,17 +27,8 @@
                     "iam:ListRoles",
                     "iam:ListUsers"
                 ],
-                "Resource": "*"
-            }, 
-            {
-                "Effect": "Deny",
-                "Action": [
-                    "iam:ListRoles",
-                    "iam:ListUsers"
-                ],
-                "Resource": "*"
+                "Resource": "adssad"
             } 
-
 
         ]
     }

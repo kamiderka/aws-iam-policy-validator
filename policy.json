@@ -10,7 +10,7 @@
                     "iam:ListRoles",
                     "iam:ListUsers"
                 ],
-                "Resource": "*"
+                "Resource": "dsadasd"
             }
         ]
     }

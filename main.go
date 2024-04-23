@@ -2,39 +2,37 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
-
-	"github.com/go-playground/validator/v10"
+	"os"
 )
 
-var validate *validator.Validate
-
 func main() {
-	jsonBytes, err := ioutil.ReadFile("wrong_policy.json")
+	filePath := flag.String("file", "", "Ścieżka do pliku JSON do walidacji")
+	flag.Parse()
+
+	if *filePath == "" {
+		fmt.Println("Nie podano ścieżki do pliku JSON")
+		os.Exit(1)
+	}
+
+	jsonFile, err := ioutil.ReadFile(*filePath)
 	if err != nil {
 		fmt.Println("Błąd podczas odczytu pliku:", err)
-		return
+		os.Exit(1)
 	}
 
 	var policy AwsIamRolePolicy
-	if err := json.Unmarshal(jsonBytes, &policy); err != nil {
+	if err := json.Unmarshal(jsonFile, &policy); err != nil {
 		fmt.Println("Błąd podczas deserializacji danych JSON:", err)
 		return
 	}
 
-	fmt.Println("PolicyName:", policy.PolicyName)
-	fmt.Println("Version:", policy.PolicyDocument.Version)
-	fmt.Println("Statements:")
-	for _, stmt := range policy.PolicyDocument.Statement {
-		fmt.Println("  Sid:", stmt.Sid)
-		fmt.Println("  Effect:", stmt.Effect)
-		fmt.Println("  Action:", stmt.Action)
-		fmt.Println("  Resource:", stmt.Resource)
-	}
 	validate = NewValidator()
 	if err = validate.Struct(policy); err != nil {
-		fmt.Println(err.Error())
+		fmt.Println("false")
+	} else {
+		fmt.Println("true")
 	}
-	fmt.Println("end ")
 }
