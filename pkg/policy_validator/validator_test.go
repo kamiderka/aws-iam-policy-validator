@@ -53,81 +53,143 @@ func Test_IsValidVersion(t *testing.T) {
 	}
 }
 
-// func TestIsValidPoliceName(t *testing.T) {
-// 	tests := []struct {
-// 		name  string
-// 		valid bool
-// 	}{
-// 		{"valid-name", true},
-// 		{"invalid_name", false},
-// 		{"invalid:name", false},
-// 	}
+func Test_IsValidPoliceName(t *testing.T) {
+	tests := []struct {
+		have  string
+		want bool
+	}{
+		{"validName", true},            
+		{"Valid_Name", true},          
+		{"ValidName123", true},        
+		{"123ValidName", true},        
+		{"Valid-Name", true},          
+		{"Valid.Name", true},           
+		{"Valid@Name", true},           
+		{"Valid=Name", true},           
+		{"Valid,Name", true},           
+		{"Valid=Name,123", true},       
+		{"Valid_Name@123", true},       
+		{"Valid_Name@", true},       
+		{"valid-Name,", true},
+		{"Invalid-Name!", false},  
+		{"", false},                    
+		{" ", false},                   
+		{"Invalid Name", false},        
+		{"Invalid\nName", false},
+		{"Invalid:Name", false},        
+	}  
 
-// 	for _, tt := range tests {
-// 		assert.Equal(t, tt.valid, isValidPoliceName(validator.FieldLevel{Field: validator.Field{Value: tt.name}}))
-// 	}
-// }
+		validate := validator.New()
+		validate.RegisterValidation("test-valid-police-name", isValidPoliceName)
+	
+		for _, item := range tests {
+			err := validate.Var(item.have, "test-valid-police-name")
+			if item.want {
+				assert.Nil(t, err)
+			} else {
+				assert.Error(t, err)
+			}
+		}
+	}
 
-// func TestIsUniqueStatementSids(t *testing.T) {
-// 	tests := []struct {
-// 		statements []*Statement
-// 		valid      bool
-// 	}{
-// 		{[]*Statement{{Sid: "sid1"}, {Sid: "sid2"}}, true},
-// 		{[]*Statement{{Sid: "sid1"}, {Sid: "sid1"}}, false},
-// 		{[]*Statement{{Sid: "sid1"}, {Sid: ""}}, true}, // Empty SID is valid
-// 	}
+func TestIsUniqueStatementSids(t *testing.T) {
+	tests := []struct {
+		have 	[]*Statement
+		want      bool
+	}{
+		{[]*Statement{{Sid: "sid1"}, {Sid: "sid2"}}, true},
 
-// 	for _, tt := range tests {
-// 		assert.Equal(t, tt.valid, isUniqueStatementSids(validator.FieldLevel{Field: validator.Field{Value: tt.statements}}))
-// 	}
-// }
+		{[]*Statement{{Sid: "sid1"}, {Sid: "sid1"}}, false},
+	
+		{[]*Statement{{Sid: "sid1"}, {Sid: ""}}, true}, 
+	
+		{[]*Statement{{Sid: ""}, {Sid: ""}}, true},
+		 
+		{[]*Statement{{Sid: "sid1"}, {Sid: "sid2"},
+					{Sid: "sid3"}, {Sid: "sid4"}}, true},
 
-// func TestIsValidAction(t *testing.T) {
-// 	tests := []struct {
-// 		action string
-// 		valid  bool
-// 	}{
-// 		{"s3:GetObject", true},
-// 		{"ec2:RunInstances", true},
-// 		{"invalid", false},
-// 	}
+		{[]*Statement{{Sid: "sid1"}, {Sid: "sid2"},
+					{Sid: "sid3"}, {Sid: "sid1"}}, false},
 
-// 	for _, tt := range tests {
-// 		assert.Equal(t, tt.valid, isValidAction(validator.FieldLevel{Field: validator.Field{Value: tt.action}}))
-// 	}
-// }
+		{[]*Statement{{}}, true},
 
-// func TestIsValidSid(t *testing.T) {
-// 	tests := []struct {
-// 		sid   string
-// 		valid bool
-// 	}{
-// 		{"sid1", true},
-// 		{"sid-1", true},
-// 		{"invalid:sid", false},
-// 	}
+		}
 
-// 	for _, tt := range tests {
-// 		assert.Equal(t, tt.valid, isValidSid(validator.FieldLevel{Field: validator.Field{Value: tt.sid}}))
-// 	}
-// }
+		validate := validator.New()
+		validate.RegisterValidation("test-unique-statement-sids", isUniqueStatementSids)
+	
+		for _, item := range tests {
+			err := validate.Var(item.have, "test-unique-statement-sids")
+			if item.want {
+				assert.Nil(t, err)
+			} else {
+				assert.Error(t, err)
+			}
+		}
+}
 
-// func TestNewValidator(t *testing.T) {
-// 	v := NewValidator()
-// 	require.NotNil(t, v)
+func TestIsValidAction(t *testing.T) {
+	tests := []struct {
+		have  string
+		want  bool
+	}{
+		{"s3:GetObject", true},
+		{"s3:PutObject", true},
+		{"ec2:DescribeInstances", true},
+		{"dynamodb:PutItem", true},
+		{"InvalidAction", false},            
+		{"s3:GetObject*", false},
+		{"s3:get_object*", false},            
+		{"ec2:*", false},                    
+		{"dynamodb:PutItem?", false},  
+		{"s3:GetObjA2:s", false},       
+		{"s3:GetObject, s3:PutObject", false}, 
+		{"s3:GetObject,InvalidAction", false}, 
+		{"s3:GetObject InvalidAction", false}, 
+		{"", false},                         
+	}
+	
+	validate := validator.New()
+	validate.RegisterValidation("test-valid-action", isValidAction)
 
-// 	// Test whether the custom validations are registered
-// 	_, ok := v.TagMap()["valid-effect"]
-// 	assert.True(t, ok)
-// 	_, ok = v.TagMap()["valid-version"]
-// 	assert.True(t, ok)
-// 	_, ok = v.TagMap()["valid-police-name"]
-// 	assert.True(t, ok)
-// 	_, ok = v.TagMap()["unique-sids"]
-// 	assert.True(t, ok)
-// 	_, ok = v.TagMap()["valid-action"]
-// 	assert.True(t, ok)
-// 	_, ok = v.TagMap()["valid-sid"]
-// 	assert.True(t, ok)
-// }
+	for _, item := range tests {
+		err := validate.Var(item.have, "test-valid-action")
+		if item.want {
+			assert.Nil(t, err)
+		} else {
+			assert.Error(t, err)
+		}
+	}
+}
+
+func TestIsValidSid(t *testing.T) {
+	tests := []struct {
+		have   	string
+		want 	bool
+	}{
+		{"sid1", true},           
+		{"sid_2", false},          
+		{"s3", true},             
+		{"invalid!sid", false},   
+		{"s-id,sid", false},      
+		{"", true},
+		{" ", false},   
+		{"s-id sid", false},      
+		{"s-id'sid", false},     
+		{"s-id&sid", false},      
+		{"s-id@", false},        
+		{"sid123456789012345678901234567890123456789012345678901234567890", true}, 
+		}
+
+		validate := validator.New()
+		validate.RegisterValidation("test-valid-sid", isValidSid)
+	
+		for _, item := range tests {
+			err := validate.Var(item.have, "test-valid-sid")
+			if item.want {
+				assert.Nil(t, err)
+			} else {
+				assert.Error(t, err)
+			}
+		}
+		}
