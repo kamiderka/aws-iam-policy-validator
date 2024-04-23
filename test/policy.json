@@ -1,17 +1,15 @@
 {
-    "PolicyName": "root",
+    "PolicyName": "AllowDynamoDB",
     "PolicyDocument": {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "IamListAccess",
-                "Effect": "Allow",
-                "Action": [
-                    "iam:ListRoles",
-                    "iam:ListUsers"
-                ],
-                "Resource": "dsadasd"
-            }
-        ]
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "1",
+          "Effect": "Allow",
+          "Action": ["dynamodb:GetObject"],
+          "Resource": "dsadsa*"
+        }
+      ]
     }
-}
+  }
+  
