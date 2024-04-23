@@ -11,16 +11,16 @@ cd ./aws-iam-policy-validator
 ```
 
 From this place you can: 
-> use binary `./bin/validator.exe`
 
-> build it by yourswelf `go build cmd/validator .`
+- use binary: `./bin/validator.exe`
+- build it by yourself:  `go build cmd/validator .`
+- or run it by yourself `go run cmd/validator/main.go`
 
-> or run it by yourself `go run cmd/validator/main.go`
-
-## Usage: 
+## Usage:
+````
   -dir string
         Path to the directory containing JSON files to validate
   -file string
         Path to the JSON file to validate
-
-Makefile coming soon! 
+````
+Better Readme and Makefile coming soon! 
