@@ -7,7 +7,7 @@
           "Sid": "1",
           "Effect": "Allow",
           "Action": ["dynamodb:GetObject"],
-          "Resource": "arn:aws:dynamodb:us-east-1:123456789012:table/*"
+          "Resource": "dsadsa*"
         }
       ]
     }
