@@ -1,2 +1,2 @@
 # aws-iam-policy-validator
-Getting started
+Full Readme will be ready in +- 1 hour
