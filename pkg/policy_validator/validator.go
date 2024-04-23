@@ -1,4 +1,4 @@
-package main
+package policy_validator
 
 import (
 	// "github.com/deckarep/golang-set"

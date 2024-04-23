@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"github.com/kamiderka/aws-iam-policy-validator/pkg/policy_validator"
 )
 
 func main() {
@@ -23,13 +24,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	var policy AwsIamRolePolicy
+	var policy policy_validator.AwsIamRolePolicy
 	if err := json.Unmarshal(jsonFile, &policy); err != nil {
 		fmt.Println("Błąd podczas deserializacji danych JSON:", err)
 		return
 	}
 
-	validate = NewValidator()
+	validate := policy_validator.NewValidator()
 	if err = validate.Struct(policy); err != nil {
 		fmt.Println("false")
 	} else {
