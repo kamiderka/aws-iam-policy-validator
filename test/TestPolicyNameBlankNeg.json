@@ -1,13 +1,13 @@
 {
-    "PolicyName": "AllowDynamoDB",
+    "PolicyName": "",
     "PolicyDocument": {
       "Version": "2012-10-17",
       "Statement": [
         {
           "Sid": "1",
           "Effect": "Allow",
-          "Action": ["dynamodb:GetObject"],
-          "Resource": "dsadsa*"
+          "Action": ["dynamodb:GetObject", "s3:GetObject"],
+          "Resource": "arn:partition:service:region:account-id:resource-id"
         }
       ]
     }
