@@ -7,7 +7,7 @@ type AwsIamRolePolicy struct {
 
 type PolicyDocument struct {
 	Version   		string      	`json:"Version" validate:"required,valid-version" `
-	Statement 		[]*Statement 	`json:"Statement" validate:"unique-sids,dive"`
+	Statement 		[]*Statement 	`json:"Statement" validate:"required,unique-sids,dive"`
 }
 type Statement struct {
 	Sid      		string   		`json:"Sid,omitempty" validate:"valid-sid"`
